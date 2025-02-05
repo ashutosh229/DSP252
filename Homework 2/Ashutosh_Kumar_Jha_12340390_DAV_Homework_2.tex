@@ -1,0 +1,354 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+
+
+\title{Ashutosh Kumar Jha 12340390 Homework 2}
+\author{Ashutosh Kumar Jha}
+\date{February 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Question 1}
+The colab notebook for the solution is attached below:
+\href{https://colab.research.google.com/drive/1wwd6boNGOdFm88OwarMbC4dLGmsv5qHH?usp=sharing}{Colab Notebook}
+
+\subsection{Q1. How does creating batches impact the training process?}
+\subsubsection{Computational Efficiency}
+\begin{itemize}
+    \item Processing data in batches (instead of one sample at a time) makes efficient use of hardware resources, especially GPUs and TPUs, as they can process matrix operations in parallel.
+    \item Large batches utilize vectorized operations better, leading to faster training.
+\end{itemize}
+
+\subsubsectionStability of Training}
+\begin{itemize}
+    \item Large batches provide more stable gradient estimates, leading to smoother convergence.
+    \item Small batches introduce more noise into gradient updates, which can help escape local minima but might slow convergence.
+\end{itemize}
+
+\subsubsection{Memory Constraints}
+\begin{itemize}
+    \item Training on entire datasets at once is infeasible for large datasets due to memory limitations. Batching allows models to be trained on limited GPU/CPU memory.
+\end{itemize}
+
+\subsubsection{Convergence Speed}
+\begin{itemize}
+    \item Smaller batches introduce more variance in gradient updates, which can lead to faster generalization but slower overall convergence.
+    \item Larger batches have more accurate gradient estimates but may result in models stuck in sharp local minima.
+\end{itemize}
+
+\subsubsection{Generalization}
+\begin{itemize}
+    \item Very small batches may cause excessive noise, preventing good generalization.
+    \item Very large batches might overfit to training data and fail to generalize to unseen data.
+\end{itemize}
+
+\subsubsection{Types of Batch Processing}
+\begin{itemize}
+    \item \textbf{Mini-batch gradient descent} (most common): Uses a subset of data to compute gradients.
+    \item \textbf{Batch gradient descent}: Uses the entire dataset to compute gradients (slow but accurate).
+    \item \textbf{Stochastic gradient descent (SGD)}: Uses one data point at a time, introducing high variance in updates.
+\end{itemize}
+
+\subsubsection{Choosing the Right Batch Size}
+\begin{itemize}
+    \item \textbf{Small batches} (e.g., 8-32): Better generalization but noisier updates.
+    \item \textbf{Medium batches} (e.g., 64-256): Balance between stability and speed.
+    \item \textbf{Large batches} (e.g., 512-4096+): Faster convergence but may need careful tuning (e.g., learning rate scaling).
+\end{itemize}
+
+
+
+
+\subsection{Q2. How does the model generalize when we use different sized batches?}
+
+\subsubsection{Small Batches (e.g., 8 - 64)}
+\textbf{Pros:} Better Generalization\newline
+\textbf{Cons:} Slower Convergence \& Noisier Updates\newline
+\begin{itemize}
+    \item \textbf{More Noise in Gradients:} Small batches introduce stochasticity (randomness) in gradient updates, preventing the model from settling into sharp, narrow minima (which often lead to overfitting).
+    \item \textbf{Better Exploration:} The noise in gradients allows the optimizer to escape sharp local minima and find flatter minima, which are known to generalize better.
+    \item \textbf{Regularization Effect:} Acts like an implicit form of regularization (similar to dropout or weight decay), improving the model’s ability to adapt to new data.
+\end{itemize}
+\textbf{Best for:} Complex datasets where generalization is more important than speed.
+
+\subsubsection{Medium Batches (e.g., 128 - 512)}
+\textbf{Pros:} Balanced Generalization \& Speed\newline
+\textbf{Cons:} Still Some Noise, But More Stability\newline
+\begin{itemize}
+    \item \textbf{Compromise Between Stability \& Exploration:} Reduces noise compared to small batches, but still retains some randomness for better generalization.
+    \item \textbf{Faster Convergence:} More accurate gradient estimates lead to quicker learning without excessive computational cost.
+    \item \textbf{Good for Many Applications:} Works well for most deep learning tasks, including computer vision and NLP.
+\end{itemize}
+\textbf{Best for:} Many practical applications where training time and generalization must be balanced.
+
+\subsubsection{Large Batches (e.g., 1024 - 4096+)}
+\textbf{Pros:} Faster Training \& More Stable Gradients\newline
+\textbf{Cons:} Poor Generalization Without Adjustments\newline
+\begin{itemize}
+    \item \textbf{Less Noise, More Precise Updates:} Large batches have smoother gradient estimates, making convergence more stable.
+    \item \textbf{Risk of Overfitting:} Can lead to sharp local minima that do not generalize well to unseen data.
+    \item \textbf{Difficulty Escaping Bad Minima:} The optimizer may get trapped in sharp, high-curvature regions of the loss landscape.
+    \item \textbf{Requires Learning Rate Scaling:} To maintain effective optimization, the learning rate must often be increased.
+\end{itemize}
+\textbf{Best for:} When training speed is critical, but requires additional techniques to improve generalization.
+
+\subsubsection{Key Takeaways}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Batch Size & Noise in Gradients & Convergence Speed & Generalization \\
+\midrule
+Small (8-64) & High (noisy) & Slow & Best (flat minima) \\
+Medium (128-512) & Moderate & Balanced & Good \\
+Large (1024-4096+) & Low (smooth) & Fast & Poor (sharp minima) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Improving Generalization for Large Batches}
+\begin{itemize}
+    \item \textbf{Learning Rate Warmup} – Start with a small learning rate and gradually increase it.
+    \item \textbf{Batch Normalization} – Helps mitigate issues related to sharp minima.
+    \item \textbf{Stochastic Weight Averaging (SWA)} – Averages multiple models trained with different batch updates to improve generalization.
+    \item \textbf{Data Augmentation \& Regularization} – Techniques like dropout, weight decay, and mixup help prevent overfitting.
+    \item \textbf{Sharpness-Aware Minimization (SAM)} – A technique that encourages flatter minima even with large batch sizes.
+\end{itemize}
+
+
+\subsection{Q3. Does Epochs and Learning Rate share any relation. Justify}
+
+\subsubsection{Inverse Relationship}
+\begin{itemize}
+    \item The number of epochs required for convergence decreases as the learning rate increases.
+    \item A higher learning rate updates weights more aggressively, leading to faster convergence.
+\end{itemize}
+
+\subsubsection{Trade-Off Between Stability and Speed}
+\begin{itemize}
+    \item If the learning rate is too small, the model converges slowly, requiring more epochs.
+    \item If the learning rate is too high, the model may overshoot the optimal value or diverge.
+\end{itemize}
+
+\subsubsection{Optimal Learning Rate Selection}
+\begin{itemize}
+    \item A moderate learning rate ensures efficient convergence in fewer epochs while maintaining stability.
+    \item Adaptive learning rate strategies (e.g., decay or scheduling) help balance convergence speed and stability.
+\end{itemize}
+
+\subsubsection{Empirical Justification}
+\begin{itemize}
+    \item In gradient descent plots, a low learning rate shows a gradual and smooth decline in loss.
+    \item A high learning rate can show oscillations or even divergence instead of convergence.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Question 2}
+\subsection{a}
+\subsection*{Given Functions:}
+\[
+f_1(x) = \sin(x_1) \cos(x_2), \quad x \in \mathbb{R}^2
+\]
+\[
+f_2(x, y) = x^\top y, \quad x, y \in \mathbb{R}^n
+\]
+\[
+f_3(x) = xx^\top, \quad x \in \mathbb{R}^n
+\]
+
+\subsection*{(a) Dimensions of $\frac{\partial f}{\partial x}$:}
+\begin{itemize}
+    \item For $f_1(x)$: 
+    \[
+    \frac{\partial f_1}{\partial x} \in \mathbb{R}^{1 \times 2}
+    \]
+    because $f_1(x)$ is scalar and $x \in \mathbb{R}^2$.
+    
+    \item For $f_2(x, y)$:
+    \[
+    \frac{\partial f_2}{\partial x} \in \mathbb{R}^{1 \times n}, \quad \frac{\partial f_2}{\partial y} \in \mathbb{R}^{1 \times n}
+    \]
+    because $f_2(x, y)$ is scalar and $x, y \in \mathbb{R}^n$.
+
+    \item For $f_3(x)$:
+    \[
+    \frac{\partial f_3}{\partial x} \in \mathbb{R}^{n \times n \times n}
+    \]
+    because $f_3(x) \in \mathbb{R}^{n \times n}$ and $x \in \mathbb{R}^n$.
+\end{itemize}
+
+\subsection*{(b) Jacobians:}
+
+\textbf{1. For $f_1(x)$:}
+\[
+\frac{\partial f_1}{\partial x} = 
+\begin{bmatrix}
+\cos(x_1)\cos(x_2) & -\sin(x_1)\sin(x_2)
+\end{bmatrix}
+\]
+
+\textbf{2. For $f_2(x, y)$:}
+\[
+\frac{\partial f_2}{\partial x} = y^\top, \quad \frac{\partial f_2}{\partial y} = x^\top
+\]
+
+\textbf{3. For $f_3(x)$:}
+\[
+\frac{\partial f_3}{\partial x} = 
+\frac{\partial}{\partial x} (xx^\top) = 
+\begin{bmatrix}
+\frac{\partial}{\partial x_1}(xx^\top) & \cdots & \frac{\partial}{\partial x_n}(xx^\top)
+\end{bmatrix}
+\]
+Each term is given as:
+\[
+\frac{\partial}{\partial x_i}(xx^\top) = 
+\begin{bmatrix}
+\delta_{1i}x_1 + \delta_{i1}x_1 & \cdots & \delta_{1i}x_n + \delta_{i1}x_n \\
+\vdots & \ddots & \vdots \\
+\delta_{ni}x_1 + \delta_{in}x_1 & \cdots & \delta_{ni}x_n + \delta_{in}x_n
+\end{bmatrix}
+\]
+where $\delta_{ij}$ is the Kronecker delta.
+
+\subsection{b}
+\subsection*{(a) Use the chain rule and provide the dimensions:}
+
+Given:
+\[
+f(z) = \exp\left(-\frac{1}{2} z\right), \quad z = g(y) = y^\top S^{-1} y, \quad y = h(x) = x - \mu,
+\]
+where \(x, \mu \in \mathbb{R}^D\) and \(S \in \mathbb{R}^{D \times D}\).
+
+\paragraph{Step 1: Dimensions of \(f(z)\):}
+\[
+f(z): \mathbb{R} \to \mathbb{R}, \quad \frac{\partial f}{\partial z} \in \mathbb{R}.
+\]
+
+\paragraph{Step 2: Dimensions of \(z = y^\top S^{-1} y\):}
+\[
+y \in \mathbb{R}^D, \quad S^{-1} \in \mathbb{R}^{D \times D}, \quad z = y^\top S^{-1} y \in \mathbb{R}.
+\]
+\[
+\frac{\partial z}{\partial y} = 2 S^{-1} y, \quad \frac{\partial z}{\partial y} \in \mathbb{R}^D.
+\]
+
+\paragraph{Step 3: Dimensions of \(y = x - \mu\):}
+\[
+x, \mu \in \mathbb{R}^D, \quad y = x - \mu \in \mathbb{R}^D.
+\]
+\[
+\frac{\partial y}{\partial x} = I, \quad \frac{\partial y}{\partial x} \in \mathbb{R}^{D \times D}.
+\]
+
+\paragraph{Chain Rule:}
+Using the chain rule:
+\[
+\frac{\partial f}{\partial x} = \frac{\partial f}{\partial z} \cdot \frac{\partial z}{\partial y} \cdot \frac{\partial y}{\partial x}.
+\]
+Dimensions:
+\[
+\frac{\partial f}{\partial x} \in \mathbb{R}^D.
+\]
+
+---
+
+\subsection*{(b) Compute the derivatives of \(f(x) = \text{tr}(xx^\top + \sigma^2 I)\):}
+
+Given:
+\[
+f(x) = \text{tr}(xx^\top + \sigma^2 I),
+\]
+where \(x \in \mathbb{R}^D\) and \(I \in \mathbb{R}^{D \times D}\) is the identity matrix.
+
+\paragraph{Step 1: Simplify \(f(x)\):}
+\[
+f(x) = \text{tr}(xx^\top) + \text{tr}(\sigma^2 I).
+\]
+\[
+\text{tr}(xx^\top) = \sum_{i=1}^D x_i^2, \quad \text{tr}(\sigma^2 I) = D \cdot \sigma^2.
+\]
+\[
+f(x) = \sum_{i=1}^D x_i^2 + D \cdot \sigma^2.
+\]
+
+\paragraph{Step 2: Derivative of \(f(x)\):}
+The derivative of \(\text{tr}(xx^\top)\) with respect to \(x\) is:
+\[
+\frac{\partial \text{tr}(xx^\top)}{\partial x} = 2x.
+\]
+\[
+\frac{\partial f}{\partial x} = 2x.
+\]
+
+---
+
+\subsection*{(c) Use the chain rule for \(f = \tanh(z)\):}
+
+Given:
+\[
+f = \tanh(z), \quad z = Ax + b, \quad x \in \mathbb{R}^N, \, A \in \mathbb{R}^{M \times N}, \, b \in \mathbb{R}^M.
+\]
+
+\paragraph{Step 1: Dimensions:}
+\[
+f \in \mathbb{R}^M, \quad z \in \mathbb{R}^M, \quad x \in \mathbb{R}^N, \quad A \in \mathbb{R}^{M \times N}, \quad b \in \mathbb{R}^M.
+\]
+
+\paragraph{Step 2: Derivatives:}
+\begin{itemize}
+    \item \(\frac{\partial f}{\partial z} = \text{diag}(1 - \tanh^2(z)) \in \mathbb{R}^{M \times M}\).
+    \item \(\frac{\partial z}{\partial x} = A \in \mathbb{R}^{M \times N}\).
+\end{itemize}
+
+\paragraph{Chain Rule:}
+Using the chain rule:
+\[
+\frac{\partial f}{\partial x} = \frac{\partial f}{\partial z} \cdot \frac{\partial z}{\partial x}.
+\]
+Dimensions:
+\[
+\frac{\partial f}{\partial x} \in \mathbb{R}^{M \times N}.
+\]
+
+
+
+
+
+
+
+
+\section{Question 3}
+
+The colab notebook for the solution of the question is attached below:
+\href{https://colab.research.google.com/drive/1wwd6boNGOdFm88OwarMbC4dLGmsv5qHH?usp=sharing}{Colab Notebook}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
