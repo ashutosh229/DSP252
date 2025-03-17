@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3.js Assignment 2</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+    <h2>D3.js Assignment 2</h2>
+
+    <p>Original Paragraph</p>
+    <div id="container"></div>
+    <ul id="list"></ul>
+    <svg id="svg-container" width="500" height="300" style="border:1px solid black;"></svg>
+
+    <!-- Question 1: Selecting & Modifying Elements -->
+    <script>
+        d3.select("p").text("New Text");
+    </script>
+
+    <!-- Question 2: Appending Elements -->
+    <script>
+        d3.select("#container").append("h1").text("Hello, D3.js!");
+    </script>
+
+    <!-- Question 3: Styling Elements -->
+    <script>
+        d3.selectAll("p")
+            .style("color", "blue")
+            .style("font-size", "20px");
+    </script>
+
+    <!-- Question 4: Data Binding -->
+    <script>
+        const fruits = ["Apple", "Banana", "Cherry", "Pineapple", "Mango"];
+        d3.select("#list").selectAll("li")
+            .data(fruits)
+            .enter()
+            .append("li")
+            .text(d => d);
+    </script>
+
+    <!-- Question 5: Creating an SVG Circle -->
+    <script>
+        d3.select("#svg-container").append("circle")
+            .attr("cx", 100)
+            .attr("cy", 100)
+            .attr("r", 50)
+            .attr("fill", "red");
+    </script>
+
+    <!-- Question 6: Using Scales -->
+    <script>
+        const scale = d3.scaleLinear().domain([0, 100]).range([0, 500]);
+        d3.select("#container").append("p").text(`Scaled Value of 50: ${scale(50)}`);
+    </script>
+
+    <!-- Question 7: Adding an Axis -->
+    <script>
+        const xScale = d3.scaleLinear().domain([0, 100]).range([0, 400]);
+        const xAxis = d3.axisBottom(xScale);
+
+        d3.select("#svg-container").append("g")
+            .attr("transform", "translate(50,250)")
+            .call(xAxis);
+    </script>
+
+    <!-- Question 8: Creating a Bar Chart -->
+    <script>
+        const data = [10, 20, 30, 40, 50, 60, 70, 80];
+        d3.select("#svg-container").selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", (d, i) => i * 50 + 10)
+            .attr("y", d => 300 - d * 3)
+            .attr("width", 40)
+            .attr("height", d => d * 3)
+            .attr("fill", "steelblue");
+    </script>
+
+    <!-- Question 9: Implementing Transitions -->
+    <script>
+        d3.select("#svg-container").append("circle")
+            .attr("cx", 250)
+            .attr("cy", 150)
+            .attr("r", 20)
+            .attr("fill", "green")
+            .transition()
+            .duration(2000)
+            .attr("r", 50);
+    </script>
+
+    <!-- Question 10: Creating a Line Chart -->
+    <script>
+        const lineData = [{x: 10, y: 30}, {x: 20, y: 80}, {x: 30, y: 50}, {x: 40, y: 100}];
+
+        const lineX = d3.scaleLinear().domain([0, 50]).range([0, 300]);
+        const lineY = d3.scaleLinear().domain([0, 100]).range([200, 0]);
+
+        const lineGen = d3.line()
+            .x(d => lineX(d.x))
+            .y(d => lineY(d.y));
+
+        d3.select("#svg-container").append("path")
+            .datum(lineData)
+            .attr("d", lineGen)
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 2);
+    </script>
+
+</body>
+</html>
