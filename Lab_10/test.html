@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>D3.js Example</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+<p>This is the first paragraph.</p>
+<p>This is the second paragraph.</p>
+<p>This is the third paragraph.</p>
+
+<script>
+// Select the first <p> element and change its text
+d3.select("p")
+  .text("Hello D3!");
+
+// Select all <p> elements and change their color
+d3.selectAll("p")
+  .style("color", "red");
+</script>
+
+</body>
+</html>
